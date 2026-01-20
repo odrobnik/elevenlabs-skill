@@ -144,7 +144,7 @@ Examples:
         
         tier = sub.get("tier", "unknown")
         status = sub.get("status", "unknown")
-        billing = sub.get("billing_period", "").replace("_", " ")
+        billing = sub.get("billing_period", "").replace("_period", "").replace("_", " ")
         voice_slots_used = sub.get("voice_slots_used", 0)
         voice_limit = sub.get("voice_limit", 0)
         pro_voice_used = sub.get("professional_voice_slots_used", 0)
