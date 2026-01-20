@@ -153,7 +153,7 @@ Examples:
         can_pvc = sub.get("can_use_professional_voice_cloning", False)
         
         print(f"\n📊 ElevenLabs Quota")
-        print("=" * 40)
+        print("=" * 39)
         print(f"Plan:      {tier} ({status}) — {billing}")
         print(f"Characters: {format_characters(used)} / {format_characters(limit)} ({pct:.1f}%)")
         
