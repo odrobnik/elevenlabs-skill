@@ -143,11 +143,18 @@ Examples:
         reset_ts = sub.get("next_character_count_reset_unix")
         
         tier = sub.get("tier", "unknown")
-        voice_count = sub.get("voice_count", 0)
+        status = sub.get("status", "unknown")
+        billing = sub.get("billing_period", "").replace("_", " ")
+        voice_slots_used = sub.get("voice_slots_used", 0)
         voice_limit = sub.get("voice_limit", 0)
+        pro_voice_used = sub.get("professional_voice_slots_used", 0)
+        pro_voice_limit = sub.get("professional_voice_limit", 0)
+        can_ivc = sub.get("can_use_instant_voice_cloning", False)
+        can_pvc = sub.get("can_use_professional_voice_cloning", False)
         
-        print(f"\n📊 ElevenLabs Quota ({tier})")
+        print(f"\n📊 ElevenLabs Quota")
         print("=" * 40)
+        print(f"Plan:      {tier} ({status}) — {billing}")
         print(f"Characters: {format_characters(used)} / {format_characters(limit)} ({pct:.1f}%)")
         
         # Progress bar
@@ -161,7 +168,9 @@ Examples:
             days_until = (reset_dt - datetime.now()).days
             print(f"Resets:    {reset_dt.strftime('%Y-%m-%d')} ({days_until} days)")
         
-        print(f"Voices:    {voice_count} / {voice_limit}")
+        print(f"Voices:    {voice_slots_used} / {voice_limit} (IVC: {'✓' if can_ivc else '✗'})")
+        if pro_voice_limit > 0:
+            print(f"Pro Voice: {pro_voice_used} / {pro_voice_limit} (PVC: {'✓' if can_pvc else '✗'})")
         
         # Warning if approaching limit
         if pct >= args.warn_pct:
