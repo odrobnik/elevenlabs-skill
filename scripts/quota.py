@@ -51,33 +51,41 @@ def get_subscription(api_key: str | None = None) -> dict:
 
 def get_usage_stats(
     api_key: str | None = None,
-    start_unix: int | None = None,
-    end_unix: int | None = None,
+    start_unix_ms: int | None = None,
+    end_unix_ms: int | None = None,
+    breakdown_type: str = "voice",
+    aggregation_interval: str = "day",
 ) -> dict:
     """
     Get character usage statistics over time.
     
     Args:
-        start_unix: Start timestamp (default: 30 days ago)
-        end_unix: End timestamp (default: now)
+        start_unix_ms: Start timestamp in milliseconds (default: 30 days ago)
+        end_unix_ms: End timestamp in milliseconds (default: now)
+        breakdown_type: How to break down usage ("voice", "user", "api_key", "product")
+        aggregation_interval: Time grouping ("hour", "day", "week", "month", "cumulative")
     
-    Returns dict with usage breakdown by time period.
+    Returns dict with:
+        - time: list of unix timestamps (ms)
+        - usage: map of breakdown keys to usage values per time interval
     """
     api_key = api_key or os.environ.get("ELEVENLABS_API_KEY")
     if not api_key:
         raise ValueError("ELEVENLABS_API_KEY not set")
 
-    # Default to last 30 days
-    if end_unix is None:
-        end_unix = int(datetime.now().timestamp())
-    if start_unix is None:
-        start_unix = int((datetime.now() - timedelta(days=30)).timestamp())
+    # Default to last 30 days — timestamps in MILLISECONDS
+    if end_unix_ms is None:
+        end_unix_ms = int(datetime.now().timestamp() * 1000)
+    if start_unix_ms is None:
+        start_unix_ms = int((datetime.now() - timedelta(days=30)).timestamp() * 1000)
 
     url = "https://api.elevenlabs.io/v1/usage/character-stats"
     headers = {"xi-api-key": api_key}
     params = {
-        "start_unix": start_unix,
-        "end_unix": end_unix,
+        "start_unix": start_unix_ms,
+        "end_unix": end_unix_ms,
+        "breakdown_type": breakdown_type,
+        "aggregation_interval": aggregation_interval,
     }
     
     response = requests.get(url, headers=headers, params=params)
@@ -122,9 +130,9 @@ Examples:
             import json
             output = {"subscription": sub}
             if args.usage:
-                end_ts = int(datetime.now().timestamp())
-                start_ts = int((datetime.now() - timedelta(days=args.days)).timestamp())
-                output["usage"] = get_usage_stats(start_unix=start_ts, end_unix=end_ts)
+                end_ts_ms = int(datetime.now().timestamp() * 1000)
+                start_ts_ms = int((datetime.now() - timedelta(days=args.days)).timestamp() * 1000)
+                output["usage"] = get_usage_stats(start_unix_ms=start_ts_ms, end_unix_ms=end_ts_ms)
             print(json.dumps(output, indent=2))
             return
         
@@ -161,25 +169,41 @@ Examples:
         
         # Usage stats
         if args.usage:
-            end_ts = int(datetime.now().timestamp())
-            start_ts = int((datetime.now() - timedelta(days=args.days)).timestamp())
-            usage = get_usage_stats(start_unix=start_ts, end_unix=end_ts)
+            end_ts_ms = int(datetime.now().timestamp() * 1000)
+            start_ts_ms = int((datetime.now() - timedelta(days=args.days)).timestamp() * 1000)
+            usage = get_usage_stats(start_unix_ms=start_ts_ms, end_unix_ms=end_ts_ms)
             
             print(f"\n📈 Usage (last {args.days} days)")
             print("-" * 40)
             
-            # Sum up usage from the response
-            usage_data = usage.get("usage", []) or usage.get("data", []) or []
-            if isinstance(usage_data, list) and usage_data:
-                total_chars = sum(d.get("character_count", 0) for d in usage_data)
-                print(f"Total: {format_characters(total_chars)} characters")
+            time_axis = usage.get("time", [])
+            usage_map = usage.get("usage", {})
+            
+            if time_axis and usage_map:
+                # Sum total across all breakdown types
+                total_chars = 0
+                for key, values in usage_map.items():
+                    key_total = sum(v for v in values if v)
+                    total_chars += key_total
+                    if key_total > 0:
+                        print(f"  {key}: {format_characters(int(key_total))}")
                 
-                # Show daily breakdown if available
-                for entry in usage_data[-7:]:  # Last 7 entries
-                    date = entry.get("date", entry.get("date_unix", "?"))
-                    chars = entry.get("character_count", 0)
-                    if chars > 0:
-                        print(f"  {date}: {format_characters(chars)}")
+                if total_chars > 0:
+                    print(f"\nTotal: {format_characters(int(total_chars))} characters")
+                    
+                    # Show daily breakdown
+                    print(f"\nDaily breakdown:")
+                    for i, ts_ms in enumerate(time_axis[-7:]):  # Last 7 days
+                        date = datetime.fromtimestamp(ts_ms / 1000).strftime("%Y-%m-%d")
+                        day_total = sum(
+                            values[len(time_axis) - 7 + i] 
+                            for values in usage_map.values() 
+                            if len(values) > len(time_axis) - 7 + i
+                        )
+                        if day_total > 0:
+                            print(f"  {date}: {format_characters(int(day_total))}")
+                else:
+                    print("No usage in this period")
             else:
                 print("No usage data available")
         
