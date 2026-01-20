@@ -74,3 +74,46 @@ python3 {baseDir}/scripts/voices.py
 # JSON output
 python3 {baseDir}/scripts/voices.py --json
 ```
+
+### 5. Voice Cloning (`voiceclone.py`)
+Create instant voice clones from audio samples.
+
+```bash
+# Clone from audio files
+python3 {baseDir}/scripts/voiceclone.py --name "MyVoice" --files sample1.mp3 sample2.mp3
+
+# With language and gender labels
+python3 {baseDir}/scripts/voiceclone.py --name "Andi" --files *.m4a --language de --gender male
+
+# With description and noise removal
+python3 {baseDir}/scripts/voiceclone.py --name "Andi" --files *.m4a --description "German male" --denoise
+```
+
+### 6. Quota & Usage (`quota.py`)
+Check subscription quota and usage statistics.
+
+```bash
+# Show current quota
+python3 {baseDir}/scripts/quota.py
+
+# Include usage breakdown by voice
+python3 {baseDir}/scripts/quota.py --usage
+
+# Last 7 days usage
+python3 {baseDir}/scripts/quota.py --usage --days 7
+
+# JSON output
+python3 {baseDir}/scripts/quota.py --json
+```
+
+Output:
+```
+📊 ElevenLabs Quota
+=======================================
+Plan:      pro (active) — annual
+Characters: 66.6K / 500.0K (13.3%)
+           [███░░░░░░░░░░░░░░░░░░░░░░░░░░░]
+Resets:    2026-02-18 (29 days)
+Voices:    22 / 160 (IVC: ✓)
+Pro Voice: 0 / 1 (PVC: ✓)
+```
