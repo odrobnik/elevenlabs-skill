@@ -82,8 +82,12 @@ def generate_speech(
         except:
             pass
         raise RuntimeError(f"ElevenLabs API error {response.status_code}: {detail}")
+    
+    # Extract character cost from response headers
+    char_cost = response.headers.get("character-cost")
+    character_cost = int(char_cost) if char_cost else None
         
-    return response.content
+    return response.content, character_cost
 
 
 def main():
@@ -106,7 +110,7 @@ def main():
     args = parser.parse_args()
 
     try:
-        audio = generate_speech(
+        audio, character_cost = generate_speech(
             text=args.text,
             voice_id=args.voice_id,
             model_id=args.model,
@@ -120,7 +124,10 @@ def main():
         with open(args.output, "wb") as f:
             f.write(audio)
 
+        # Output includes character cost for tracking
         print(f"Generated: {args.output}")
+        if character_cost is not None:
+            print(f"character_cost={character_cost}")
 
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)

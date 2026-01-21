@@ -69,6 +69,7 @@ class DialogueResult:
     voice_segments: list[VoiceSegment]
     alignment: dict[str, Any] | None
     normalized_alignment: dict[str, Any] | None
+    character_cost: int | None = None
 
 
 def generate_dialogue(
@@ -135,6 +136,10 @@ def generate_dialogue(
             pass
         raise RuntimeError(f"ElevenLabs API error {response.status_code}: {detail}")
     
+    # Extract character cost from response headers
+    char_cost = response.headers.get("character-cost")
+    character_cost = int(char_cost) if char_cost else None
+    
     result = response.json()
     
     # Parse response
@@ -157,6 +162,7 @@ def generate_dialogue(
         voice_segments=voice_segments,
         alignment=result.get("alignment"),
         normalized_alignment=result.get("normalized_alignment"),
+        character_cost=character_cost,
     )
 
 
@@ -324,6 +330,8 @@ Examples:
         # Print summary
         total_duration = max(seg.end_time_seconds for seg in result.voice_segments) if result.voice_segments else 0
         print(f"Duration: {total_duration:.2f}s, Segments: {len(result.voice_segments)}", file=sys.stderr)
+        if result.character_cost is not None:
+            print(f"character_cost={result.character_cost}")
 
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
