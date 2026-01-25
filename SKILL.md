@@ -1,10 +1,16 @@
+---
+name: elevenlabs
+description: Text-to-speech, sound effects, music generation, voice management, and quota checks via the ElevenLabs API. Use when generating audio with ElevenLabs or managing voices.
+metadata: {"clawdbot":{"requires":{"bins":["python3"],"env":["ELEVENLABS_API_KEY"]},"primaryEnv":"ELEVENLABS_API_KEY"}}
+---
+
 # ElevenLabs Skill
 
 Core tools for interacting with the ElevenLabs API for sound generation, music, and voice management.
 
 ## Setup
 
-Requires `ELEVENLABS_API_KEY` (or `XI_API_KEY`) in environment.
+Requires `ELEVENLABS_API_KEY` in environment.
 
 ## Output Formats
 

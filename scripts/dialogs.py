@@ -24,7 +24,6 @@ Usage (Module):
 """
 
 import argparse
-import base64
 import json
 import os
 import subprocess
@@ -37,7 +36,7 @@ import requests
 
 
 DEFAULT_MODEL = "eleven_v3"
-API_URL = "https://api.elevenlabs.io/v1/text-to-dialogue/with-timestamps"
+API_URL = "https://api.elevenlabs.io/v1/text-to-dialogue"
 
 # Supported output formats
 OUTPUT_FORMATS = [
@@ -139,29 +138,15 @@ def generate_dialogue(
     # Extract character cost from response headers
     char_cost = response.headers.get("character-cost")
     character_cost = int(char_cost) if char_cost else None
-    
-    result = response.json()
-    
-    # Parse response
-    audio_bytes = base64.b64decode(result["audio_base64"])
-    
-    voice_segments = [
-        VoiceSegment(
-            voice_id=seg["voice_id"],
-            start_time_seconds=seg["start_time_seconds"],
-            end_time_seconds=seg["end_time_seconds"],
-            character_start_index=seg["character_start_index"],
-            character_end_index=seg["character_end_index"],
-            dialogue_input_index=seg["dialogue_input_index"],
-        )
-        for seg in result.get("voice_segments", [])
-    ]
-    
+
+    # Endpoint returns raw audio bytes (no timestamps)
+    audio_bytes = response.content
+
     return DialogueResult(
         audio_bytes=audio_bytes,
-        voice_segments=voice_segments,
-        alignment=result.get("alignment"),
-        normalized_alignment=result.get("normalized_alignment"),
+        voice_segments=[],
+        alignment=None,
+        normalized_alignment=None,
         character_cost=character_cost,
     )
 
