@@ -3,7 +3,7 @@ name: elevenlabs
 description: Text-to-speech, sound effects, music generation, voice management, and quota checks via the ElevenLabs API. Use when generating audio with ElevenLabs or managing voices.
 version: 1.0.0
 homepage: https://github.com/odrobnik/elevenlabs-skill
-metadata: {"clawdbot":{"requires":{"bins":["python3"],"env":["ELEVENLABS_API_KEY"]},"primaryEnv":"ELEVENLABS_API_KEY"}}
+metadata: {"moltbot":{"requires":{"bins":["python3"],"env":["ELEVENLABS_API_KEY"]},"primaryEnv":"ELEVENLABS_API_KEY"}}
 ---
 
 # ElevenLabs Skill
