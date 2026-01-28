@@ -18,7 +18,35 @@ import argparse
 import os
 import sys
 from datetime import datetime, timedelta
+from pathlib import Path
+
 import requests
+
+
+def _load_dotenv(paths: list[Path]) -> None:
+    """Best-effort .env loader (KEY=VALUE), without external deps."""
+    for p in paths:
+        try:
+            if not p.exists():
+                continue
+            for line in p.read_text(errors="ignore").splitlines():
+                s = line.strip()
+                if not s or s.startswith("#") or "=" not in s:
+                    continue
+                k, v = s.split("=", 1)
+                k = k.strip()
+                v = v.strip().strip('"').strip("'")
+                if k and k not in os.environ:
+                    os.environ[k] = v
+        except Exception:
+            continue
+
+
+# Load common env locations so cron jobs can rely on .env files.
+_load_dotenv([
+    Path.home() / ".moltbot" / ".env",
+    Path("/Users/oliver/clawd/.env"),
+])
 
 
 def get_subscription(api_key: str | None = None) -> dict:

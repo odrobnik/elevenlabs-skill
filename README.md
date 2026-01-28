@@ -1,4 +1,4 @@
-# ElevenLabs (Clawdbot Skill)
+# ElevenLabs (Moltbot Skill)
 
 Core tools for interacting with the ElevenLabs API (TTS, SFX, music, voice management, quota).
 
