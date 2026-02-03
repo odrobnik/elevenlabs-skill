@@ -1,14 +1,23 @@
-# ElevenLabs (Moltbot Skill)
+# elevenlabs-skill
 
-Core tools for interacting with the ElevenLabs API (TTS, SFX, music, voice management, quota).
+🔊 Text-to-speech, sound effects, music generation, voice management, and quota checks via the [ElevenLabs](https://elevenlabs.io) API.
 
-- 📦 Install via ClawdHub: https://clawdhub.com/s/elevenlabs
-- 🤖 How the skill works (agent docs): **[SKILL.md](SKILL.md)**
+An [OpenClaw](https://openclaw.ai) skill.
 
-## Quick start
+## Quick Start
 
 ```bash
 # Requires ELEVENLABS_API_KEY
+python3 scripts/speech.py "Hello world" -v <voice_id> -o hello.mp3
+python3 scripts/sfx.py "Cinematic boom" -o boom.mp3
+python3 scripts/music.py --prompt "Jazz piano" --length-ms 10000 -o jazz.mp3
+python3 scripts/voices.py
 python3 scripts/quota.py
-python3 scripts/speech.py "Hello" -o hello.mp3
 ```
+
+See [SKILL.md](SKILL.md) for full documentation.
+
+## Links
+
+- **GitHub**: https://github.com/odrobnik/elevenlabs-skill
+- **ClawHub**: https://www.clawhub.com/skills/elevenlabs

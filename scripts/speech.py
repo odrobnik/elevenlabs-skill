@@ -23,11 +23,20 @@ DEFAULT_MODEL = "eleven_multilingual_v2"
 OUTPUT_FORMATS = [
     "mp3_44100_128",  # default
     "mp3_44100_192",
+    "mp3_44100_96",
+    "mp3_44100_64",
+    "mp3_44100_32",
+    "mp3_24000_48",
+    "mp3_22050_32",
+    "opus_48000_192",  # best for AirPlay (48kHz)
+    "opus_48000_128",
+    "opus_48000_96",
+    "opus_48000_64",
+    "opus_48000_32",
     "pcm_16000",
     "pcm_22050",
     "pcm_24000",
-    "pcm_44100",
-    "ulaw_8000",
+    "alaw_8000",
 ]
 DEFAULT_OUTPUT_FORMAT = "mp3_44100_128"
 

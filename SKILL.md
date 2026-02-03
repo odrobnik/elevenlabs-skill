@@ -1,9 +1,17 @@
 ---
 name: elevenlabs
 description: Text-to-speech, sound effects, music generation, voice management, and quota checks via the ElevenLabs API. Use when generating audio with ElevenLabs or managing voices.
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/odrobnik/elevenlabs-skill
-metadata: {"moltbot":{"requires":{"bins":["python3"],"env":["ELEVENLABS_API_KEY"]},"primaryEnv":"ELEVENLABS_API_KEY"}}
+metadata:
+  {
+    "openclaw":
+      {
+        "emoji": "🔊",
+        "requires": { "bins": ["python3"], "env": ["ELEVENLABS_API_KEY"] },
+        "primaryEnv": "ELEVENLABS_API_KEY",
+      },
+  }
 ---
 
 # ElevenLabs Skill
@@ -22,11 +30,20 @@ All scripts support multiple output formats via `--format`:
 |--------|-------------|
 | `mp3_44100_128` | MP3, 44.1kHz, 128kbps (default) |
 | `mp3_44100_192` | MP3, 44.1kHz, 192kbps |
+| `mp3_44100_96` | MP3, 44.1kHz, 96kbps |
+| `mp3_44100_64` | MP3, 44.1kHz, 64kbps |
+| `mp3_44100_32` | MP3, 44.1kHz, 32kbps |
+| `mp3_24000_48` | MP3, 24kHz, 48kbps |
+| `mp3_22050_32` | MP3, 22.05kHz, 32kbps |
+| `opus_48000_192` | Opus, 48kHz, 192kbps ⭐ best for AirPlay |
+| `opus_48000_128` | Opus, 48kHz, 128kbps |
+| `opus_48000_96` | Opus, 48kHz, 96kbps |
+| `opus_48000_64` | Opus, 48kHz, 64kbps |
+| `opus_48000_32` | Opus, 48kHz, 32kbps |
 | `pcm_16000` | Raw PCM, 16kHz |
 | `pcm_22050` | Raw PCM, 22.05kHz |
 | `pcm_24000` | Raw PCM, 24kHz |
-| `pcm_44100` | Raw PCM, 44.1kHz |
-| `ulaw_8000` | μ-law, 8kHz (telephony) |
+| `alaw_8000` | A-law, 8kHz (telephony) |
 
 ## Tools
 
