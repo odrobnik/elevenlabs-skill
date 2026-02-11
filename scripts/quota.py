@@ -23,6 +23,19 @@ from pathlib import Path
 import requests
 
 
+def _find_workspace_root() -> Path:
+    """Walk up from script location to find workspace root (parent of 'skills/')."""
+    env = os.environ.get("ELEVENLABS_WORKSPACE")
+    if env:
+        return Path(env)
+    d = Path(__file__).resolve().parent
+    for _ in range(6):
+        if (d / "skills").is_dir() and d != d.parent:
+            return d
+        d = d.parent
+    return Path.cwd()
+
+
 def _load_dotenv(paths: list[Path]) -> None:
     """Best-effort .env loader (KEY=VALUE), without external deps."""
     for p in paths:
@@ -45,7 +58,7 @@ def _load_dotenv(paths: list[Path]) -> None:
 # Load common env locations so cron jobs can rely on .env files.
 _load_dotenv([
     Path.home() / ".moltbot" / ".env",
-    Path("/Users/oliver/clawd/.env"),
+    _find_workspace_root() / ".env",
 ])
 
 

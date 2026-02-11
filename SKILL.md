@@ -22,6 +22,24 @@ Core tools for interacting with the ElevenLabs API for sound generation, music, 
 
 Requires `ELEVENLABS_API_KEY` in environment.
 
+## Models
+
+| Model | ID | Use Case |
+|-------|----|----------|
+| **Eleven v3** | `eleven_v3` | ⭐ Best for expressive/creative audio. Supports **audio tags** (square brackets): `[laughs]`, `[sighs]`, `[whispers]`, `[excited]`, `[grumpy voice]`, `[clears throat]`, etc. Use for storytelling, characters, demos. |
+| Multilingual v2 | `eleven_multilingual_v2` | Stable multilingual. No audio tags. Good for straightforward narration. |
+| Turbo v2.5 | `eleven_turbo_v2_5` | Low-latency, good for non-English (German TTS). Required for realtime/conversational. |
+| Flash v2.5 | `eleven_flash_v2_5` | Fastest, lowest cost. |
+
+### v3 Audio Tags (square brackets, NOT XML/SSML)
+```
+[laughs], [chuckles], [sighs], [clears throat], [whispers], [shouts]
+[excited], [sad], [angry], [warmly], [deadpan], [sarcastic]
+[grumpy voice], [philosophical], [whiny voice], [resigned]
+[laughs hard], [sighs deeply], [pause]
+```
+Tags can be placed anywhere in text. Combine freely. v3 understands emotional context deeply.
+
 ## Output Formats
 
 All scripts support multiple output formats via `--format`:
