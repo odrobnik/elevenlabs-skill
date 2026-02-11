@@ -1,7 +1,7 @@
 ---
 name: elevenlabs
 description: Text-to-speech, sound effects, music generation, voice management, and quota checks via the ElevenLabs API. Use when generating audio with ElevenLabs or managing voices.
-version: 1.1.1
+version: 1.1.2
 homepage: https://github.com/odrobnik/elevenlabs-skill
 metadata:
   {
@@ -125,15 +125,20 @@ python3 {baseDir}/scripts/voices.py --json
 ### 5. Voice Cloning (`voiceclone.py`)
 Create instant voice clones from audio samples.
 
+**Security:** by default this script will only read files from:
+- `~/.openclaw/elevenlabs/voiceclone-samples/`
+
+Copy your samples there (or pass `--sample-dir`). Reading arbitrary paths is blocked unless you explicitly opt in with `--unsafe-allow-any-path`.
+
 ```bash
-# Clone from audio files
+# Clone from audio files (put samples into ~/.openclaw/elevenlabs/voiceclone-samples)
 python3 {baseDir}/scripts/voiceclone.py --name "MyVoice" --files sample1.mp3 sample2.mp3
 
-# With language and gender labels
-python3 {baseDir}/scripts/voiceclone.py --name "Andi" --files *.m4a --language de --gender male
+# Use a custom sample dir
+python3 {baseDir}/scripts/voiceclone.py --name "Andi" --sample-dir ./samples --files a.m4a b.m4a --language de --gender male
 
 # With description and noise removal
-python3 {baseDir}/scripts/voiceclone.py --name "Andi" --files *.m4a --description "German male" --denoise
+python3 {baseDir}/scripts/voiceclone.py --name "Andi" --files a.m4a b.m4a --description "German male" --denoise
 ```
 
 ### 6. Quota & Usage (`quota.py`)
