@@ -61,9 +61,11 @@ def _load_dotenv(paths: list[Path]) -> None:
             continue
 
 
-# Load common env locations so cron jobs can rely on .env files.
+# Load local .env files (best-effort) so cron jobs can rely on them.
+# NOTE: We intentionally do NOT read arbitrary home-directory .env files.
+_skill_root = Path(__file__).resolve().parents[1]
 _load_dotenv([
-    Path.home() / ".moltbot" / ".env",
+    _skill_root / ".env",
     _find_workspace_root() / ".env",
 ])
 
