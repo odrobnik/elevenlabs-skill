@@ -1,7 +1,7 @@
 ---
 name: elevenlabs
 description: Text-to-speech, sound effects, music generation, voice management, and quota checks via the ElevenLabs API. Use when generating audio with ElevenLabs or managing voices.
-version: 1.1.2
+version: 1.1.3
 homepage: https://github.com/odrobnik/elevenlabs-skill
 metadata:
   {
@@ -24,7 +24,7 @@ Requires `ELEVENLABS_API_KEY` in environment.
 
 Notes:
 - Some helper scripts use **`ffmpeg`** (e.g. splitting dialogue audio) and **`afplay`** (optional playback on macOS).
-- `scripts/quota.py` will *optionally* load a local `.env` from the skill folder (and/or workspace `.env`) for cron convenience.
+- `scripts/quota.py` will *optionally* load a local `.env` from the skill folder and/or the dedicated state dir (set `ELEVENLABS_DIR`, default `~/.openclaw/elevenlabs`). It intentionally does **not** load a workspace-wide `.env`.
 
 ## Models
 

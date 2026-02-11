@@ -61,12 +61,35 @@ def _load_dotenv(paths: list[Path]) -> None:
             continue
 
 
+def _find_state_dir() -> Path:
+    """Resolve a dedicated state/config dir for this skill.
+
+    IMPORTANT: We intentionally do NOT load a workspace-wide `.env` because that can
+    accidentally import unrelated secrets.
+    """
+    env = os.environ.get("ELEVENLABS_DIR")
+    if env:
+        return Path(env).expanduser()
+
+    workspace = _find_workspace_root()
+    ws_dir = workspace / "elevenlabs"
+    if ws_dir.is_dir():
+        return ws_dir
+
+    home = Path.home()
+    new = home / ".openclaw" / "elevenlabs"
+    legacy = home / ".moltbot" / "elevenlabs"
+    if new.is_dir() or not legacy.is_dir():
+        return new
+    return legacy
+
+
 # Load local .env files (best-effort) so cron jobs can rely on them.
-# NOTE: We intentionally do NOT read arbitrary home-directory .env files.
+# NOTE: We only read `.env` from the skill folder and the dedicated state dir.
 _skill_root = Path(__file__).resolve().parents[1]
 _load_dotenv([
     _skill_root / ".env",
-    _find_workspace_root() / ".env",
+    _find_state_dir() / ".env",
 ])
 
 
