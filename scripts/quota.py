@@ -25,10 +25,6 @@ import requests
 
 def _find_workspace_root() -> Path:
     """Walk up from script location to find workspace root (parent of 'skills/')."""
-    env = os.environ.get("ELEVENLABS_WORKSPACE")
-    if env:
-        return Path(env)
-    
     # Prefer CWD if it looks like a workspace (handles symlinks correctly)
     cwd = Path.cwd()
     if (cwd / "skills").is_dir():

@@ -8,11 +8,7 @@ from pathlib import Path
 
 
 def _find_workspace_root() -> Path:
-    """Walk up from CWD (or ELEVENLABS_WORKSPACE) to find workspace root."""
-    env = os.environ.get("ELEVENLABS_WORKSPACE") or os.environ.get("OPENCLAW_WORKSPACE")
-    if env:
-        return Path(env).expanduser().resolve()
-
+    """Walk up from CWD to find workspace root."""
     cwd = Path.cwd()
     if (cwd / "skills").is_dir():
         return cwd

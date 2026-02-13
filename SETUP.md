@@ -11,7 +11,11 @@
   ```
 - **afplay** (macOS) — For optional audio playback (built-in on macOS)
 
-No additional Python packages required. The skill uses only Python standard library and makes direct HTTP requests to the ElevenLabs API.
+Requires the `requests` Python package:
+
+```bash
+python3 -m pip install requests
+```
 
 ### API Key
 
