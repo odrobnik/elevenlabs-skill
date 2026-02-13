@@ -17,7 +17,8 @@ python3 scripts/quota.py
 
 See [SKILL.md](SKILL.md) for full documentation.
 
-## Links
+## Documentation
 
-- **GitHub**: https://github.com/odrobnik/elevenlabs-skill
-- **ClawHub**: https://www.clawhub.com/skills/elevenlabs
+- [SKILL.md](SKILL.md) — agent-facing reference (commands, behavior, limitations)
+- [SETUP.md](SETUP.md) — prerequisites, configuration, and setup instructions
+- [ClawHub](https://www.clawhub.com/skills/elevenlabs) — install via ClawHub registry
