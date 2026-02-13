@@ -1,7 +1,7 @@
 ---
 name: elevenlabs
 description: Text-to-speech, sound effects, music generation, voice management, and quota checks via the ElevenLabs API. Use when generating audio with ElevenLabs or managing voices.
-version: 1.3.0
+version: 1.3.1
 homepage: https://github.com/odrobnik/elevenlabs-skill
 metadata:
   {
