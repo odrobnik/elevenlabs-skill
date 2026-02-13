@@ -42,30 +42,11 @@ def _find_workspace_root() -> Path:
     return Path.cwd()
 
 
-def _load_dotenv(paths: list[Path]) -> None:
-    """Best-effort .env loader (KEY=VALUE), without external deps."""
-    for p in paths:
-        try:
-            if not p.exists():
-                continue
-            for line in p.read_text(errors="ignore").splitlines():
-                s = line.strip()
-                if not s or s.startswith("#") or "=" not in s:
-                    continue
-                k, v = s.split("=", 1)
-                k = k.strip()
-                v = v.strip().strip('"').strip("'")
-                if k and k not in os.environ:
-                    os.environ[k] = v
-        except Exception:
-            continue
-
-
 def _find_state_dir() -> Path:
     """Resolve a dedicated state/config dir for this skill.
 
-    IMPORTANT: We intentionally do NOT load a workspace-wide `.env` because that can
-    accidentally import unrelated secrets.
+    Auth: set ELEVENLABS_API_KEY in the environment, or put it in
+    workspace/elevenlabs/config.json (key: "api_key").
     """
     env = os.environ.get("ELEVENLABS_DIR")
     if env:
@@ -82,15 +63,6 @@ def _find_state_dir() -> Path:
     if new.is_dir() or not legacy.is_dir():
         return new
     return legacy
-
-
-# Load local .env files (best-effort) so cron jobs can rely on them.
-# NOTE: We only read `.env` from the skill folder and the dedicated state dir.
-_skill_root = Path(__file__).resolve().parents[1]
-_load_dotenv([
-    _skill_root / ".env",
-    _find_state_dir() / ".env",
-])
 
 
 def get_subscription(api_key: str | None = None) -> dict:

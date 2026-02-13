@@ -130,11 +130,14 @@ def main():
             use_speaker_boost=args.speaker_boost,
         )
 
-        with open(args.output, "wb") as f:
+        from _pathguard import safe_output_path
+        out = safe_output_path(args.output)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        with open(out, "wb") as f:
             f.write(audio)
 
         # Output includes character cost for tracking
-        print(f"Generated: {args.output}")
+        print(f"Generated: {out}")
         if character_cost is not None:
             print(f"character_cost={character_cost}")
 

@@ -162,7 +162,8 @@ def main() -> int:
         print(f"Error: {e}", file=sys.stderr)
         return 1
 
-    out_path = Path(args.out).expanduser().resolve()
+    from _pathguard import safe_output_path
+    out_path = safe_output_path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_bytes(audio)
 
