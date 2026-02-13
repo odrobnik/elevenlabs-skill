@@ -1,14 +1,14 @@
 ---
 name: elevenlabs
 description: Text-to-speech, sound effects, music generation, voice management, and quota checks via the ElevenLabs API. Use when generating audio with ElevenLabs or managing voices.
-version: 1.3.1
+version: 1.3.2
 homepage: https://github.com/odrobnik/elevenlabs-skill
 metadata:
   {
     "openclaw":
       {
         "emoji": "🔊",
-        "requires": { "bins": ["python3", "ffmpeg", "afplay"], "env": ["ELEVENLABS_API_KEY"] },
+        "requires": { "bins": ["python3", "ffmpeg", "afplay"], "python": ["requests"], "env": ["ELEVENLABS_API_KEY"] },
         "primaryEnv": "ELEVENLABS_API_KEY",
       },
   }
