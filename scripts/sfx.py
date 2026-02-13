@@ -88,8 +88,9 @@ def generate_sfx(
             pass
         raise RuntimeError(f"API error {response.status_code}: {error_detail}")
     
-    # Write output
-    output = Path(output_path)
+    # Write output (path-guarded)
+    from _pathguard import safe_output_path
+    output = safe_output_path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_bytes(response.content)
     

@@ -269,8 +269,10 @@ Examples:
             apply_text_normalization=args.normalize,
         )
         
-        # Write combined audio
-        output_path = Path(args.output)
+        # Write combined audio (path-guarded)
+        from _pathguard import safe_output_path
+        output_path = safe_output_path(args.output)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, "wb") as f:
             f.write(result.audio_bytes)
         print(f"Generated: {output_path}", file=sys.stderr)
@@ -297,14 +299,18 @@ Examples:
                 "alignment": result.alignment,
                 "normalized_alignment": result.normalized_alignment,
             }
-            with open(args.metadata, "w") as f:
+            meta_path = safe_output_path(args.metadata)
+            meta_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(meta_path, "w") as f:
                 json.dump(metadata, f, indent=2)
-            print(f"Metadata: {args.metadata}", file=sys.stderr)
+            print(f"Metadata: {meta_path}", file=sys.stderr)
         
         # Split by speakers if requested
         if args.split_speakers:
-            split_dir = Path(args.split_dir) if args.split_dir else output_path.with_suffix("") / "_clips"
-            split_dir = Path(str(output_path).replace(output_path.suffix, "_clips"))
+            if args.split_dir:
+                split_dir = safe_output_path(args.split_dir)
+            else:
+                split_dir = Path(str(output_path).replace(output_path.suffix, "_clips"))
             
             print(f"Splitting into per-speaker clips...", file=sys.stderr)
             speaker_clips = split_by_speakers(output_path, result.voice_segments, split_dir)

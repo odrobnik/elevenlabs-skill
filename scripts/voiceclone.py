@@ -22,12 +22,8 @@ ALLOWED_EXTENSIONS = {".mp3", ".m4a", ".wav", ".ogg", ".flac", ".webm"}
 MAX_FILE_MB = 50
 
 
-def _resolve_sample_path(file_path: str, *, sample_dir: Path, unsafe_allow_any_path: bool) -> Path:
+def _resolve_sample_path(file_path: str, *, sample_dir: Path) -> Path:
     p = Path(file_path)
-
-    if unsafe_allow_any_path:
-        resolved = p.expanduser().resolve()
-        return resolved
 
     base = sample_dir.expanduser().resolve()
     # Interpret relative paths as relative to sample_dir (not CWD)
@@ -36,13 +32,13 @@ def _resolve_sample_path(file_path: str, *, sample_dir: Path, unsafe_allow_any_p
     try:
         if not resolved.is_relative_to(base):
             raise ValueError(
-                f"Refusing to read '{file_path}'. Put samples under {base} or pass --unsafe-allow-any-path."
+                f"Refusing to read '{file_path}'. Put samples under {base}."
             )
     except AttributeError:
-        # Python <3.9 fallback (shouldn't happen here, but keep safe)
+        # Python <3.9 fallback
         if str(resolved).startswith(str(base) + "/") is False and resolved != base:
             raise ValueError(
-                f"Refusing to read '{file_path}'. Put samples under {base} or pass --unsafe-allow-any-path."
+                f"Refusing to read '{file_path}'. Put samples under {base}."
             )
 
     return resolved
@@ -56,7 +52,6 @@ def clone_voice(
     labels: dict[str, str] | None = None,
     remove_background_noise: bool = False,
     sample_dir: str | None = None,
-    unsafe_allow_any_path: bool = False,
 ) -> dict:
     """
     Create an instant voice clone from audio samples.
@@ -98,8 +93,7 @@ def clone_voice(
     
     # Resolve sample directory and validate file paths.
     sample_base = Path(sample_dir).expanduser() if sample_dir else DEFAULT_SAMPLE_DIR
-    if not unsafe_allow_any_path:
-        sample_base.mkdir(parents=True, exist_ok=True)
+    sample_base.mkdir(parents=True, exist_ok=True)
 
     # Add audio files
     file_handles = []
@@ -109,7 +103,6 @@ def clone_voice(
             path = _resolve_sample_path(
                 file_path,
                 sample_dir=sample_base,
-                unsafe_allow_any_path=unsafe_allow_any_path,
             )
             if not path.exists():
                 raise FileNotFoundError(f"Audio file not found: {file_path}")
@@ -205,14 +198,6 @@ Examples:
             "Relative paths are resolved against this directory."
         ),
     )
-    parser.add_argument(
-        "--unsafe-allow-any-path",
-        action="store_true",
-        help=(
-            "DANGEROUS: allow reading any file path on disk (can exfiltrate secrets). "
-            "Prefer copying samples into the sample dir instead."
-        ),
-    )
     parser.add_argument("--json", action="store_true", help="Output raw JSON response")
 
     args = parser.parse_args()
@@ -236,7 +221,6 @@ Examples:
             labels=labels if labels else None,
             remove_background_noise=args.denoise,
             sample_dir=args.sample_dir,
-            unsafe_allow_any_path=args.unsafe_allow_any_path,
         )
         
         if args.json:
