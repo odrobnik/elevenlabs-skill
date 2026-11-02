@@ -69,9 +69,18 @@ Left rail: **Edit**, **Chapters**, **Characters**, **Pronunciations**, **SFX**, 
   estimate below), or when the person agrees. Cancel otherwise.
 - To move paragraphs to another voice without touching the character, select them and pick the other
   character in the Edit panel (next item).
-- **Assigning paragraphs to a voice**: click at the start of the run's first paragraph, shift-click in
-  its last paragraph. The Edit panel then reads "Edit Speech (N)". Choose the character from its
-  **Character** dropdown, which applies it to all N paragraphs. Each paragraph shows the character's
+- **Casting is not a voice plan.** Multi cast puts every quoted sentence (“…”) on a separate speaker. In a
+  book where a section's quotes belong to whoever reads that section (examples inside a commentary), that
+  is wrong. After casting, reassign by *sections*: give each section the voice of the source, quotes
+  included. Go chapter by chapter, setting the whole chapter to the default voice and each other-voice run
+  to its character.
+- **Assigning paragraphs to a voice**: click just before the first word of the run's first paragraph,
+  shift-click just after the last word of its last paragraph. The Edit panel then reads "Edit Speech (N)":
+  **check that N equals the run's paragraph count** before choosing the character from its **Character**
+  dropdown, which applies it to all N paragraphs. Clicking by element reference (centre of the block)
+  lands past a short paragraph's end and drops it from the selection. A selection ending mid-paragraph
+  **splits that paragraph** into two clips with two speakers (two badges side by side). Fix it by selecting
+  the whole paragraph and setting one character. Each paragraph shows the character's
   initial in its left badge (N = Narrator, U = Unnamed speaker, …). Clicking a badge opens that
   character's settings instead.
 - **Edit panel** for the selected paragraph(s): volume, fade in/out, type (Heading 1 / Text), character,
@@ -83,6 +92,15 @@ Left rail: **Edit**, **Chapters**, **Characters**, **Pronunciations**, **SFX**, 
   - *Advanced*: text normalization (auto / on / off) and **volume normalization** (audiobook standard:
     −3 dB ceiling, −18 to −23 dB RMS).
 - Version history is in the ☰ menu.
+
+## Verify the speakers paragraph by paragraph
+
+Screenshots only show what is in view, and the editor renders only the paragraphs near the viewport. To
+check a chapter, read the badges from the page instead: every paragraph has a button labelled
+`Open <character name>`. Scroll the editor's scroll container from top to bottom, collect one entry per
+paragraph block (the badge button's grandparent element), and compare the resulting sequence (e.g.
+`RRRRRLLLL…`) with the source's voice per paragraph. A block with two different badges is a split
+paragraph. Short chapters have no scroll container: read them without scrolling.
 
 ## Check before spending
 
