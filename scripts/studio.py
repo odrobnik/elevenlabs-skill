@@ -8,7 +8,6 @@ Usage (CLI):
     studio.py list
     studio.py get <project_id>
     studio.py create --name "Contract Law English" --content content.json [options]
-    studio.py bookforge-content <book_dir> -o content.json
     studio.py update-content <project_id> --content content.json
     studio.py edit <project_id> --name ... --title ... --author ...
     studio.py convert <project_id>
@@ -192,44 +191,6 @@ def download_snapshot(project_id: str, snapshot_id: str, out: Path, archive: boo
             f.write(chunk)
 
 
-# --- Bookforge books -> Studio content ----------------------------------------
-
-def bookforge_content(book_dir: Path, units: list[int] | None = None) -> list[dict]:
-    """Build Studio chapters from a bookforge book's chunk plans.
-
-    Reads audio/takes/unit-NN/plan.json (written by `bookforge synth`, also with --dry), whose
-    chunks carry the exact spoken text and voice, in order. One Studio chapter per unit
-    (unit-00 is the narrated front matter); one block per paragraph, one tts_node per block with
-    that chunk's voice. A unit's "Unit N. Title." line becomes h1, a part's title h2. The
-    credits and bookforge's pauses between chunks are not part of the content.
-    """
-    takes = book_dir / "audio" / "takes"
-    chapters = []
-    for udir in sorted(takes.glob("unit-*")):
-        if not udir.name[5:].isdigit() or udir.name == "unit-99":  # unit-99: store credits
-            continue
-        n = int(udir.name[5:])
-        if units and n not in units:
-            continue
-        plan_path = udir / "plan.json"
-        if not plan_path.exists():
-            raise FileNotFoundError(f"{plan_path} missing: run `bookforge synth --dry` in the book first")
-        chunks = sorted(json.loads(plan_path.read_text()), key=lambda c: c["index"])
-        blocks = []
-        for c in chunks:
-            paras = [t.strip() for t in c["text"].split("\n\n") if t.strip()]
-            for i, text in enumerate(paras):
-                sub = "p"
-                if c["role"] == "intro" and n > 0 and i == len(paras) - 1 and len(paras) > 1:
-                    sub = "h1"
-                elif i == 0 and c.get("chapter") and c["role"] == "body" and text.rstrip(".") == c["chapter"]:
-                    sub = "h2"
-                blocks.append({"sub_type": sub,
-                               "nodes": [{"type": "tts_node", "voice_id": c["voice"], "text": text}]})
-        chapters.append({"name": chunks[0].get("chapter") or udir.name, "blocks": blocks})
-    return chapters
-
-
 # --- CLI ----------------------------------------------------------------------
 
 def _print(obj: Any) -> None:
@@ -255,8 +216,6 @@ def main() -> None:
     src.add_argument("--content", help="content JSON file (chapters/blocks/nodes)")
     src.add_argument("--document", help=".epub/.pdf/.txt to import")
     src.add_argument("--url", help="URL to import")
-    src.add_argument("--bookforge", metavar="BOOK_DIR", help="build content from a bookforge book's takes")
-    p.add_argument("--units", type=int, nargs="*", help="with --bookforge: only these units")
     p.add_argument("--title-voice", dest="default_title_voice_id")
     p.add_argument("--paragraph-voice", dest="default_paragraph_voice_id")
     p.add_argument("--model", dest="default_model_id")
@@ -278,11 +237,6 @@ def main() -> None:
                    help='per-voice override, e.g. \'{"voice_id":"..","stability":0.5,"similarity_boost":0.75,"speed":1.0}\'')
     p.add_argument("--auto-convert", dest="auto_convert", action="store_true", default=None)
     p.add_argument("--callback-url", dest="callback_url")
-
-    p = sub.add_parser("bookforge-content", help="write Studio content JSON from a bookforge book")
-    p.add_argument("book_dir")
-    p.add_argument("-o", "--output", required=True)
-    p.add_argument("--units", type=int, nargs="*")
 
     p = sub.add_parser("update-content")
     p.add_argument("project_id")
@@ -325,25 +279,15 @@ def main() -> None:
             content = None
             if a.content:
                 content = _load_json(a.content)
-            elif a.bookforge:
-                content = bookforge_content(Path(a.bookforge), a.units)
             dicts = []
             for d in a.pronunciation_dict or []:
                 did, ver = d.split(":", 1)
                 dicts.append({"pronunciation_dictionary_id": did, "version_id": ver})
-            skip = {"cmd", "name", "content", "document", "url", "bookforge", "units", "pronunciation_dict", "voice_setting"}
+            skip = {"cmd", "name", "content", "document", "url", "pronunciation_dict", "voice_setting"}
             fields = {k: v for k, v in vars(a).items() if k not in skip}
             _print(create_project(
                 a.name, content=content, document=Path(a.document) if a.document else None, from_url=a.url,
                 pronunciation_dictionaries=dicts, voice_settings=[json.loads(v) for v in a.voice_setting or []], **fields))
-        elif a.cmd == "bookforge-content":
-            from _pathguard import safe_output_path
-            out = safe_output_path(a.output)
-            out.parent.mkdir(parents=True, exist_ok=True)
-            ch = bookforge_content(Path(a.book_dir), a.units)
-            out.write_text(json.dumps(ch, ensure_ascii=False, indent=1))
-            chars = sum(len(n["text"]) for c in ch for b in c["blocks"] for n in b["nodes"])
-            print(f"{out}: {len(ch)} chapters, {chars} characters", file=sys.stderr)
         elif a.cmd == "update-content":
             _print(update_content(a.project_id, _load_json(a.content), a.auto_convert))
         elif a.cmd == "edit":

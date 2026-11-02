@@ -181,10 +181,6 @@ python3 {baseDir}/scripts/studio.py create --name "My Book" --content content.js
   --title-voice <id> --paragraph-voice <id> \
   --voice-setting '{"voice_id":"<id>","stability":0.5,"similarity_boost":0.75,"speed":1.0}'
 
-# Build the content from a bookforge book (audio/takes/unit-NN/plan.json; run `bookforge synth --dry` first)
-python3 {baseDir}/scripts/studio.py bookforge-content <book_dir> -o content.json [--units 1 2]
-python3 {baseDir}/scripts/studio.py create --name "Contract Law English" --bookforge <book_dir> …
-
 python3 {baseDir}/scripts/studio.py chapters <project_id>
 python3 {baseDir}/scripts/studio.py update-content <project_id> --content content.json
 python3 {baseDir}/scripts/studio.py convert <project_id>        # spends credits; `wait <id>` polls until done
@@ -194,4 +190,4 @@ python3 {baseDir}/scripts/studio.py download <project_id> -o book.zip   # newest
 
 Also: `edit`, `delete`, `chapter`, `add-chapter`, `update-chapter`, `delete-chapter`, `convert-chapter`.
 `create` does not convert (no credits spent) unless `--auto-convert` is given. Studio has no per-paragraph
-pause setting, so bookforge's pauses between chunks are not carried over.
+pause setting. Book-specific content builders belong in the book's own repo and can `import studio`.
