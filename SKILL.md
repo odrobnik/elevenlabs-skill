@@ -1,7 +1,7 @@
 ---
 name: elevenlabs
-description: Text-to-speech, sound effects, music generation, voice management, and quota checks via the ElevenLabs API. Use when generating audio with ElevenLabs or managing voices.
-version: 1.3.4
+description: Text-to-speech, sound effects, music generation, voice management, Studio projects (audiobooks), and quota checks via the ElevenLabs API. Use when generating audio with ElevenLabs or managing voices.
+version: 1.4.0
 homepage: https://github.com/odrobnik/elevenlabs-skill
 metadata:
   {
@@ -165,3 +165,33 @@ Resets:    2026-02-18 (29 days)
 Voices:    22 / 160 (IVC: ✓)
 Pro Voice: 0 / 1 (PVC: ✓)
 ```
+
+### 7. Studio Projects (`studio.py`)
+Create and manage Studio projects and chapters ([API reference](https://elevenlabs.io/docs/api-reference/studio/add-project)).
+Project content is a list of chapters → blocks (`p`, `h1`–`h3`) → `tts_node`s (`voice_id` + `text`),
+so every paragraph can carry its own voice (two-voice audiobooks).
+
+```bash
+python3 {baseDir}/scripts/studio.py list
+python3 {baseDir}/scripts/studio.py get <project_id>
+
+# Create from a content JSON (or --document book.epub, --url https://…, or blank)
+python3 {baseDir}/scripts/studio.py create --name "My Book" --content content.json \
+  --model eleven_v4 --quality ultra_lossless --title "My Book" --author "Me" --language en \
+  --title-voice <id> --paragraph-voice <id> \
+  --voice-setting '{"voice_id":"<id>","stability":0.5,"similarity_boost":0.75,"speed":1.0}'
+
+# Build the content from a bookforge book (audio/takes/unit-NN/plan.json; run `bookforge synth --dry` first)
+python3 {baseDir}/scripts/studio.py bookforge-content <book_dir> -o content.json [--units 1 2]
+python3 {baseDir}/scripts/studio.py create --name "Contract Law English" --bookforge <book_dir> …
+
+python3 {baseDir}/scripts/studio.py chapters <project_id>
+python3 {baseDir}/scripts/studio.py update-content <project_id> --content content.json
+python3 {baseDir}/scripts/studio.py convert <project_id>        # spends credits; `wait <id>` polls until done
+python3 {baseDir}/scripts/studio.py snapshots <project_id>
+python3 {baseDir}/scripts/studio.py download <project_id> -o book.zip   # newest snapshot, zip of chapter audio
+```
+
+Also: `edit`, `delete`, `chapter`, `add-chapter`, `update-chapter`, `delete-chapter`, `convert-chapter`.
+`create` does not convert (no credits spent) unless `--auto-convert` is given. Studio has no per-paragraph
+pause setting, so bookforge's pauses between chunks are not carried over.
