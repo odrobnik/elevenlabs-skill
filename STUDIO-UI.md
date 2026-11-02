@@ -57,6 +57,10 @@ Left rail: **Edit**, **Chapters**, **Characters**, **Pronunciations**, **SFX**, 
   character** (the ✓ moves to it). Undo (↶ top left) if that happened by accident. To edit a character
   instead, hover its row and click the **settings icon** (sliders) that appears. There you set the name,
   description, voice volume, stability and "clone strength" (similarity). **+** at the top adds a character.
+  Give every character a role name and a description of what it reads (who, which parts of the book, accent).
+  Casting writes a generic one ("primary narrator…", "anyone the book does not name"). Cmd+A in the
+  description box does not select its text: set the field's value with a form-input tool, then click
+  another field so it saves. The name shows up as the paragraph badges' initial.
 - **Changing a character's voice**: settings icon → **Voice** → *Voice casting* → **My Voices** → search
   by name → click the voice's name. Do not press ▶ (a preview) and do not use the "Voice" prompt box at
   the bottom (voice design, 350 credits). Studio then shows **Reassign character voice**, listing the chapters
