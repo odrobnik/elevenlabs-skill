@@ -191,3 +191,6 @@ python3 {baseDir}/scripts/studio.py download <project_id> -o book.zip   # newest
 Also: `edit`, `delete`, `chapter`, `add-chapter`, `update-chapter`, `delete-chapter`, `convert-chapter`.
 `create` does not convert (no credits spent) unless `--auto-convert` is given. Studio has no per-paragraph
 pause setting. Book-specific content builders belong in the book's own repo and can `import studio`.
+
+**No API access?** The Studio API needs an allow-listed account (`403 invalid_subscription` otherwise,
+even on Pro). Then build the project in the web app instead: see [STUDIO-UI.md](STUDIO-UI.md).
