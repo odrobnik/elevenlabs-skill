@@ -40,8 +40,10 @@ and H3 alike), and a heading's text is spoken. So:
 2. **Formatting**: cover image, the chapter list (check its count against your chapters: a surplus
    means headings inside chapters), language, scene break length (silence at scene breaks, default 1.0s).
 3. **Characters**: name, description, preview line and voice per character (tabs Recommended / Explore /
-   My Voices). Selecting a voice here did not always stick; set the voices again afterwards in the editor's
-   Characters panel.
+   My Voices). Click the character, open **My Voices**, search the voice by name and click its name (not
+   ▶). Check the list afterwards: each row reads "(Voiced by …)". Add a character with **+ Add character**
+   for every voice the book needs (e.g. a commentary voice), not only the ones the casting detected.
+   Setting every voice here is cheapest: changing a voice later clears audio already generated.
 4. **Pronunciations**: suggested terms with Alias or phoneme rules per character. Empty rules are skipped.
 5. **Create audiobook**: the project opens in the editor.
 
@@ -49,9 +51,18 @@ and H3 alike), and a heading's text is spoken. So:
 
 Left rail: **Edit**, **Chapters**, **Characters**, **Pronunciations**, **SFX**, **Music**, **Files**.
 
-- **Characters**: click a character to set its name, voice (with stability and "clone strength", i.e.
-  similarity) and volume. Rename "Unnamed speaker" to the second voice's role and give it that voice.
-  The ✓ marks the default character.
+- **Characters panel**: **clicking a character's row assigns the current text selection to that
+  character** (the ✓ moves to it). Undo (↶ top left) if that happened by accident. To edit a character
+  instead, hover its row and click the **settings icon** (sliders) that appears. There you set the name,
+  description, voice volume, stability and "clone strength" (similarity). **+** at the top adds a character.
+- **Changing a character's voice**: settings icon → **Voice** → *Voice casting* → **My Voices** → search
+  by name → click the voice's name. Do not press ▶ (a preview) and do not use the "Voice" prompt box at
+  the bottom (voice design, 350 credits). Studio then shows **Reassign character voice**, listing the chapters
+  and paragraph counts on that character, with **Assign and clear impacted audio**: generated audio of those
+  paragraphs is discarded and must be paid for again. Only confirm when none of it is generated (Export
+  estimate below), or when the person agrees. Cancel otherwise.
+- To move paragraphs to another voice without touching the character, select them and pick the other
+  character in the Edit panel (next item).
 - **Assigning paragraphs to a voice**: click at the start of the run's first paragraph, shift-click in
   its last paragraph. The Edit panel then reads "Edit Speech (N)". Choose the character from its
   **Character** dropdown, which applies it to all N paragraphs. Each paragraph shows the character's
@@ -73,7 +84,8 @@ Left rail: **Edit**, **Chapters**, **Characters**, **Pronunciations**, **SFX**, 
 chapter), media type, file structure (**Single file** or **Chapters ZIP**), format (**MP3** or **WAV**) and
 "It will cost N credits", **broken down by voice**. Compare that breakdown with your per-voice character
 counts. A mismatch means paragraphs are still on the wrong character. Close the panel without exporting
-until it matches.
+until it matches. The estimate covers only *remaining* (ungenerated) paragraphs. If it drops below the
+document's total, some audio has been generated, and voice changes would clear it.
 
 ## Generate and download
 
