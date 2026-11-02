@@ -14,6 +14,8 @@ the ElevenLabs web app (Nov 2026) with a browser tool. UI labels may move; the r
   credits spent, only by **Generate** (paragraph/chapter) or **Export** with ungenerated paragraphs.
   The wizard's "Queueing… / NN% generated" after *Create audiobook* is the text and casting analysis,
   not audio (verified: balance unchanged, "No generation found"). Ask before Generate or Export.
+- **Playing spends credits too**: ▶ in the editor's player generates every ungenerated paragraph it reaches
+  (the top bar shows "Generating…"). Never press play to "check" a project.
 - Check the balance before and after with `quota.py` (character count) or the "credits remaining" in the
   project's top bar.
 
