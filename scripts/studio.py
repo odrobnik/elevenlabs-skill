@@ -70,7 +70,7 @@ def list_projects() -> list[dict]:
 
 
 def get_project(project_id: str) -> dict:
-    return _request("GET", f"/projects/{project_id}").json()["project"]
+    return _request("GET", f"/projects/{project_id}").json()  # fields at top level, unlike create/edit
 
 
 def create_project(
