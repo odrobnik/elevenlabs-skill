@@ -92,6 +92,15 @@ Left rail: **Edit**, **Chapters**, **Characters**, **Pronunciations**, **SFX**, 
   - *Advanced*: text normalization (auto / on / off) and **volume normalization** (audiobook standard:
     −3 dB ceiling, −18 to −23 dB RMS).
 - Version history is in the ☰ menu.
+- **Pauses**: with Eleven v4, "Insert break" is disabled ("Speech breaks are not supported with v4"). Use the
+  audio tags `[short pause]` or `[long pause]` in the text instead (`⌘;` inserts one).
+- **Badges**: paragraphs on the project's default character show just its initial ("L"), every other
+  character a pill with its name ("Juliet"). Display only. The default is set in Project settings → General.
+- **Pronunciation dictionaries** (left rail → Pronunciations): the account's dictionaries are listed under
+  "Other dictionaries" until one is applied with **Apply to project**. Dictionaries made through the API
+  (`/v1/pronunciation-dictionaries`, which works without Studio API access) may show "IPA output must start
+  and end with a slash" in the editor. Applying them still works, but saving them there creates a new
+  version, so don't, if a build is pinned to a version. Archive unused ones (PATCH `{"archived": true}`).
 
 ## Verify the speakers paragraph by paragraph
 
