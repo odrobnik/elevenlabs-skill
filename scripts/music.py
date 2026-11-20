@@ -53,11 +53,11 @@ def compose_music(
 
     payload: dict[str, object] = {
         "model_id": model_id,
-        "force_instrumental": force_instrumental,
     }
 
     if prompt:
         payload["prompt"] = prompt
+        payload["force_instrumental"] = force_instrumental  # the API rejects it with a composition plan
         if length_ms is not None:
             payload["music_length_ms"] = length_ms
     elif composition_plan_json:
